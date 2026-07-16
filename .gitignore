@@ -34,3 +34,7 @@ build/
 
 ### Application Config ###
 application.yaml
+
+# Postman local files
+.postman/
+postman/

@@ -12,15 +12,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.SpringProject.Lovable_Clone.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.AccessLevel;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AuthController {
 
-
-    private AuthService authService;
-    private UserService userService;
+    AuthService authService;
+    UserService userService;
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> signup(SignupRequest request){
