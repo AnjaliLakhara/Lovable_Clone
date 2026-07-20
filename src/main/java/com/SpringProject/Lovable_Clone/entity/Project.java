@@ -9,7 +9,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.Instant;
 
 @Entity
-@Table(name = "projects")
+@Table(name = "projects",
+indexes = {
+        @Index(name = "idx_projects_updated_at_desc", columnList = "updated_at DESC, deleted_at"),
+        @Index(name = " idx_project_deleted_at", columnList = "deleted_at")
+        }
+)
 @Getter
 @Setter
 @Builder
@@ -24,10 +29,6 @@ public class Project {
 
     @Column(nullable = false)
     String name;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
-    User owner;
 
     @Builder.Default
     @Column(name = "is_public", nullable = false)

@@ -1,5 +1,17 @@
 package com.SpringProject.Lovable_Clone.service.impl;
 
+import com.SpringProject.Lovable_Clone.entity.User;
+import com.SpringProject.Lovable_Clone.error.BadRequestException;
+import com.SpringProject.Lovable_Clone.mapper.UserMapper;
+import com.SpringProject.Lovable_Clone.repository.UserRepository;
+import com.SpringProject.Lovable_Clone.security.AuthUtil;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.SpringProject.Lovable_Clone.dto.auth.AuthResponse;
@@ -8,15 +20,35 @@ import com.SpringProject.Lovable_Clone.dto.auth.SignupRequest;
 import com.SpringProject.Lovable_Clone.service.AuthService;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AuthServiceImpl implements AuthService {
+
+    UserRepository userRepository;
+    UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
+    AuthUtil authUtil;
+    AuthenticationManager authenticationManager;
 
     @Override
     public AuthResponse signup(SignupRequest request) {
-        return null;
+        userRepository.findByUsername(request.username()). ifPresent(user -> {
+                throw new BadRequestException("User already exists with username:" + request.username());
+        });
+
+        User user = userMapper.toEntity(request);
+        user.setPassword(passwordEncoder.encode((request.password())));
+        user = userRepository.save(user);
+
+        String token = authUtil.generateAccessToken(user);
+        return new AuthResponse(token, userMapper.toUserProfileResponse(user)) ;
     }
 
     @Override
     public AuthResponse login(LoginRequest request) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.username(), request.password())
+        );
         return null;
     }
 }
