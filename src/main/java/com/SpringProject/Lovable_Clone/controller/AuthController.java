@@ -13,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.AccessLevel;
 
+import com.SpringProject.Lovable_Clone.security.JwtUserPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
@@ -32,9 +35,8 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserProfileResponse> getProfile(){
-        Long userId = 1L;
+    public ResponseEntity<UserProfileResponse> getProfile(@AuthenticationPrincipal JwtUserPrincipal userPrincipal){
+        Long userId = userPrincipal.userId();
         return ResponseEntity.ok(userService.getProfile(userId));
-
     }
 }

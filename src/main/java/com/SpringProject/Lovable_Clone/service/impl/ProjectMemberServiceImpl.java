@@ -12,6 +12,7 @@ import com.SpringProject.Lovable_Clone.mapper.ProjectMemberMapper;
 import com.SpringProject.Lovable_Clone.repository.ProjectMemberRepository;
 import com.SpringProject.Lovable_Clone.repository.ProjectRepository;
 import com.SpringProject.Lovable_Clone.repository.UserRepository;
+import com.SpringProject.Lovable_Clone.security.AuthUtil;
 import com.SpringProject.Lovable_Clone.service.ProjectMemberService;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
@@ -33,8 +34,10 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     ProjectRepository projectRepository;
     ProjectMemberMapper projectMemberMapper;
     UserRepository userRepository;
+    AuthUtil authUtil;
     @Override
-    public List<MemberResponse> getProjectMembers(Long projectId, Long userId) {
+    public List<MemberResponse> getProjectMembers(Long projectId) {
+        Long userId = authUtil.getCurrentUserId();
      Project project = getAccessibleProjectById(projectId, userId);
 
     return projectMemberRepository.findByIdProjectId(projectId).stream()
@@ -43,7 +46,8 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     }
 
     @Override
-    public MemberResponse inviteMember(Long projectId, InviteMemberRequest request, Long userId) {
+    public MemberResponse inviteMember(Long projectId, InviteMemberRequest request) {
+        Long userId = authUtil.getCurrentUserId();
         Project project = getAccessibleProjectById(projectId, userId);
 
 
@@ -72,7 +76,8 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     }
 
     @Override
-    public MemberResponse updateMemberRole(Long projectId, Long memberId, UpdateMemberRoleRequest request, Long userId) {
+    public MemberResponse updateMemberRole(Long projectId, Long memberId, UpdateMemberRoleRequest request) {
+        Long userId = authUtil.getCurrentUserId();
         Project project = getAccessibleProjectById(projectId, userId);
 
 
@@ -89,7 +94,8 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     }
 
     @Override
-    public void removeProjectMember(Long projectId, Long memberId, Long userId) {
+    public void removeProjectMember(Long projectId, Long memberId) {
+            Long userId = authUtil.getCurrentUserId();
             Project project = getAccessibleProjectById(projectId, userId);
 
             ProjectMemberId projectMemberId = new ProjectMemberId(projectId, memberId);

@@ -6,8 +6,8 @@ import com.SpringProject.Lovable_Clone.dto.member.MemberResponse;
 import com.SpringProject.Lovable_Clone.dto.member.UpdateMemberRoleRequest;
 
 public interface ProjectMemberService {
-    List<MemberResponse> getProjectMembers(Long projectId, Long userId);
-    MemberResponse inviteMember(Long projectId, InviteMemberRequest request, Long userId);
-    MemberResponse updateMemberRole(Long projectId, Long memberId, UpdateMemberRoleRequest request, Long userId);
-    void removeProjectMember(Long projectId, Long memberId, Long userId);
+    List<MemberResponse> getProjectMembers(Long projectId);
+    MemberResponse inviteMember(Long projectId, InviteMemberRequest request);
+    MemberResponse updateMemberRole(Long projectId, Long memberId, UpdateMemberRoleRequest request);
+    void removeProjectMember(Long projectId, Long memberId);
 }
